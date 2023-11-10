@@ -77,16 +77,9 @@ class RSS
             // Evito crear dos veces el mismo post
             if (Posts::exists([
                 '_rss-post-data' =>  $post['date']
-            ],
-            [
-                'category' => 'RSS'
-            ]) || 
-            Posts::exists([
+            ], null) || Posts::exists([
                 '_rss-post-data' =>  $post['date']
-            ],
-            [
-                'category' => 'RSS'
-            ], 'trash')){
+            ], null, 'trash')){
                 continue;
             }
 
