@@ -24,10 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /////////////////////////////////////////////////
 	
 
-dd(
-	Posts::getPosts('post_title,post_date,guid', null, 'publish', null, null, [
-		'_rss-perm-link' => 'https://latincloud.com/blog',
-	], [
-		'post_date' => 'DESC'
-	])
-);
+$html_string = '<img fetchpriority="high" decoding="async" width="948" height="506" src="https://latincloud.com/blog/wp-content/uploads/2023/11/word-image-20258-1-jpg.webp" alt="" class="wp-image-20259" srcset="https://latincloud.com/blog/wp-content/uploads/2023/11/word-image-20258-1-jpg.webp 948w, https://latincloud.com/blog/wp-content/uploads/2023/11/word-image-20258-1-300x160.webp 300w, https://latincloud.com/blog/wp-content/uploads/2023/11/word-image-20258-1-768x410.webp 768w" sizes="(max-width: 948px) 100vw, 948px" />';
+
+$pattern = '/<img.*?src=["\'](.*?)["\'].*?>/i';
+
+if (preg_match($pattern, $html_string, $matches)) {
+    $src = $matches[1];
+}

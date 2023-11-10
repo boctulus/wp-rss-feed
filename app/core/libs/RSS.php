@@ -54,12 +54,14 @@ class RSS
             $post_perm_link = $item->get_permalink();
             $post_title     = $item->get_title();
             $post_content   = $item->get_content();
+            $post_author    = $item->get_author();
         
             $ret['posts'][] = [
                 'title'     => $post_title,
                 'date'      => $post_date,
                 'perm_link' => $post_perm_link,
-                'content'   => $post_content
+                'content'   => $post_content,
+                'author'    => $post_author
             ]; 
         }
 
