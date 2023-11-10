@@ -2,11 +2,56 @@
 
 use boctulus\SW\core\libs\DB;
 use boctulus\SW\models\MyModel;
-use boctulus\SW\core\libs\Files;
 use boctulus\SW\core\libs\Model;
 use boctulus\SW\core\libs\StdOut;
 use boctulus\SW\core\libs\Strings;
 use boctulus\SW\controllers\MakeControllerBase;
+
+/*
+    Ej:
+
+    enqueue_data([        
+        'user_id' => $user_id
+    ]);
+*/
+function enqueue_data($data) {
+    $tb = (object) table("queue");
+
+    $tb->insert([
+        'data' => json_encode($data)
+    ]);
+}
+
+/*
+    Ej:
+
+    $row     = deque_data();
+
+    $user_id = $row['user_id'];
+    // ....
+*/
+function deque_data(bool $full_row = false) {
+    $tb = (object) table("queue");
+
+    $row = $tb
+    ->orderBy([
+        'id' => 'asc'
+    ])
+    ->getOne();
+
+    
+    if (empty($row)){
+        return false;
+    }
+
+    $id          = $row['id'];
+    $row['data'] = json_decode($row['data'], true);
+
+    $tb = (object) table("queue");
+    $tb->where(['id' => $id])->delete();
+
+    return $full_row ? $row : $row['data'];
+}
 
 function log_db_truncate(){
     DB::statement("TRUNCATE `mysql`.`general_log`");
@@ -83,7 +128,7 @@ function get_default_database_name(){
 /*
     Similar to DB::table() but schema is not loaded so no validations are performed
 */
-function table(string $tb_name){
+function table(string $tb_name) {
     return (new MyModel(true))->table($tb_name);
 }
 

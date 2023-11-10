@@ -7,7 +7,7 @@ use boctulus\SW\core\libs\Files;
 /*
 	Plugin Name: WP RSS FEED
 	Description: Posts from feeds 
-	Version: 0.0.1
+	Version: 1.0.1
 	Domain Path:  /languages
 	Text Domain: wp-rss-feed
 	Author: Pablo Bozzolo <boctulus@gmail.com>

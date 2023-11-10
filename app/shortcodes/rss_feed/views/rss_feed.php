@@ -1,23 +1,22 @@
 <?php
 
-use boctulus\SW\core\libs\Posts;
+use boctulus\SW\core\libs\RSS;
 
 $cfg  = include __DIR__ . '/../config/config.php';
 	
-$blog       = 'https://latincloud.com/blog';
-$item_limit = 3; // colocar 6
+$feed_url   = 'https://latincloud.com/blog/feed';
+$item_limit = 18; // 
 
-$posts = Posts::getPosts('post_title,post_content,guid', null, 'publish', null, null, [
-  '_rss-perm-link' => 'https://latincloud.com/blog',
-], [
-  'post_date' => 'DESC'
-]);
+$rss   = new RSS();
+
+$feed  = $rss->getPosts($feed_url, $item_limit);
+$posts = $feed['posts'];
 
 foreach ($posts as $ix => $post) {
   $pattern = '/<img.*?src=["\'](.*?)["\'].*?>/i';
 
-  if (preg_match($pattern, $post['post_content'], $matches)) {
-    $posts[$ix]['post_img'] = $matches[1];
+  if (preg_match($pattern, $post['content'], $matches)) {
+    $posts[$ix]['img'] = $matches[1];
   }
 }
 
@@ -28,22 +27,21 @@ foreach ($posts as $ix => $post) {
 
       <?php foreach ($posts as $ix => $post): ?>
         <?php
-          // link al post importado; podria ser link al post remoto en el feed
-          $link = $post['guid'];
+          $link = $post['perm_link'];
         ?>
 
         <!-- Card  -->
         <div class="col">
           
           <div class="card border-0">
-            <img src="<?= $post['post_img'] ?>" class="card-img-top" alt="Imagen">
+            <img src="<?= $post['img'] ?>" class="card-img-top" alt="Imagen">
             <div class="card-body">
-              <h5 class="card-title"><a href="<?= $link ?>"><?= $post['post_title'] ?></a></h5>
+              <h5 class="card-title"><a href="<?= $link ?>" target="_blank"><?= $post['title'] ?></a></h5>
               <p class="card-text">
-                <?= wp_html_excerpt($post['post_content'], 120) . ' [...]'; ?>
+                <?= wp_html_excerpt($post['content'], 120) . ' [...]'; ?>
               </p>
               <p>
-              <a href="<?= $link ?>">Continuar leyendo ⇨</a>
+              <a href="<?= $link ?>" target="_blank">Continuar leyendo ⇨</a>
               </p>
             </div>
             <!--div class="card-footer">
