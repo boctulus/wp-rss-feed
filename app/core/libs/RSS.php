@@ -38,7 +38,8 @@ class RSS
         $ret       = [
             'title' => $title,
             'count' => $item_qty,
-            'posts' => []
+            'posts' => [],
+            'perm_link' => $perm_link
         ];
 
         // Check items
@@ -68,7 +69,7 @@ class RSS
     /*
         Se importan los posts del feed y se les agrega la categoria "RSS"
     */
-    function importPosts($feed_url, $maxitems, $post_status = 'publish') {
+    function importPosts($feed_url, $maxitems, $post_status = 'publish', $category = null) {
         $feed  =  $this->getPosts($feed_url, $maxitems);
         $posts = $feed['posts'];
 
@@ -76,6 +77,7 @@ class RSS
         {   
             // Evito crear dos veces el mismo post
             if (Posts::exists([
+                '_rss-perm-link' => $feed['perm_link'],
                 '_rss-post-data' =>  $post['date']
             ], null) || Posts::exists([
                 '_rss-post-data' =>  $post['date']
@@ -85,7 +87,12 @@ class RSS
 
             $post_id = Posts::create($post['title'], $post['content'], $post_status);
             Posts::setMeta($post_id, 'rss_post_data', $post['date']);
-            Posts::setCategory($post_id,'RSS');
+            Posts::setMeta($post_id, 'rss_perm_link', $feed['perm_link']);
+
+            if (!empty($category)){
+                Posts::setCategory($post_id, $category);
+            }
+            
         }
 
     }

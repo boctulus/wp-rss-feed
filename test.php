@@ -46,4 +46,4 @@ $rss  = new RSS();
 // 	$rss->getPosts($feed, 3)
 // );
 
-$rss->importPosts($feed, 3);
+$rss->importPosts($feed, 2, 'publish', 'RSS');
