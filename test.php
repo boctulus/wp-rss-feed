@@ -22,28 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /////////////////////////////////////////////////
-
-
-// dd(
-// 	Posts::getMetasByID(48)
-// );
-
-// dd(Posts::exists([
-// 	'_rss-post-data' => 1699543293
-// ],
-// [
-// 	'category' => 'RSS'
-// ], 'trash'));
-
-// exit;
-
 	
-$feed = 'https://latincloud.com/blog/feed/';
 
-$rss  = new RSS();
-
-// dd(
-// 	$rss->getPosts($feed, 3)
-// );
-
-$rss->importPosts($feed, 2, 'publish', 'RSS');
+dd(
+	Posts::getPosts('post_title,post_date,guid', null, 'publish', null, null, [
+		'_rss-perm-link' => 'https://latincloud.com/blog',
+	], [
+		'post_date' => 'DESC'
+	])
+);

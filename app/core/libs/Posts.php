@@ -290,6 +290,12 @@
                 '_downloadable' => 'yes'
             ]);
 
+            Ej:
+
+            Posts::getPosts('post_title,post_content,guid', null, 'publish', null, null, [
+                '_rss-perm-link' => 'https://latincloud.com/blog',
+            ])
+
             No alterar el orden de los parametros ya que es usada en mutawp_admin !!!
         */
         static function getPosts($select = '*', $post_type = null, $post_status = null, $limit = null, $offset = null, $attributes = null, $order_by = null){
@@ -326,13 +332,21 @@
                 $offset_clause = "OFFSET $offset";
             }
 
-            $order_clause = 'ORDER BY ID ASC'; 
-            if ($order_by !== null){
-                $order_clause = "ORDER BY $order_by";
-            }
-        
+            if (is_array($order_by)){
+                $field     = array_key_first($order_by);
+                $direction = $order_by[$field];
+
+                $order_clause = "ORDER BY $field $direction";
+            } else {
+                $order_clause = 'ORDER BY ID ASC'; 
+
+                if ($order_by !== null){
+                    $order_clause = "ORDER BY $order_by";
+                }
+            }   
+           
             $sql = "SELECT $select FROM `{$wpdb->prefix}posts` WHERE ID <> 1 AND post_type = '$post_type' $include_post_status $attributes_condition $order_clause $limit_clause $offset_clause";
-        
+
             $res = $wpdb->get_results($sql, ARRAY_A);   
         
             return $res;

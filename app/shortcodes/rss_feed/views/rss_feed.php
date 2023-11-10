@@ -1,47 +1,77 @@
 <?php
 
+use boctulus\SW\core\libs\Posts;
+
 $cfg  = include __DIR__ . '/../config/config.php';
-// Get RSS Feed(s)
-include_once(ABSPATH . WPINC . '/feed.php');
 	
-$feed       = 'https://latincloud.com/blog/feed/';
-$item_limit = 3;
+$blog       = 'https://latincloud.com/blog';
+$item_limit = 3; // colocar 6
 
-
-// Get a SimplePie feed object from the specified feed source.
-$rss = fetch_feed( $feed );
-
-if (is_wp_error($rss)){
-  return;
-}
-
-// Figure out how many total items there are, and choose a limit 
-$item_qty = $rss->get_item_quantity($item_limit); 
-
-// Build an array of all the items, starting with element 0 (first element).
-$rss_items = $rss->get_items( 0, $item_qty ); 
-$perm_link = $rss->get_permalink();
-$title     = $rss->get_title();
-
-// Check items
-if ( $item_qty == 0 ) {
-  echo "No hay entradas";
-  return;
-} 
-
-// Loop through each feed item and display each item as a hyperlink.
-foreach ( $rss_items as $item ) 
-{ 
-  $post_date      = $item->get_date( get_option('date_format') );
-  $post_perm_link = $item->get_permalink();
-  $post_title     = $item->get_title();
-  $post_content   = $item->get_content();
-  
-  dd($post_content, $post_title); 
-}
-
+$posts = Posts::getPosts('post_title,post_content,guid', null, 'publish', null, null, [
+  '_rss-perm-link' => 'https://latincloud.com/blog',
+], [
+  'post_date' => 'DESC'
+]);
 
 ?>
+
+<div class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- Card 1 -->
+      <div class="col">
+        
+        <div class="card border-0">
+          <img src="ruta_de_la_imagen.jpg" class="card-img-top" alt="Imagen">
+          <div class="card-body">
+            <h5 class="card-title">Título de la Card</h5>
+            <p class="card-text">Contenido del cuerpo de la card.</p>
+          </div>
+          <div class="card-footer">
+            Pie de la card
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col">
+        <div class="card">
+          <div class="card-header" id="heading2">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                Título de la Card 2
+              </button>
+            </h5>
+          </div>
+          <div id="collapse2" class="collapse show" aria-labelledby="heading2" data-parent="#accordion">
+            <div class="card-body">
+              Contenido de la Card 2
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col">
+        <div class="card">
+          <div class="card-header" id="heading3">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                Título de la Card 3
+              </button>
+            </h5>
+          </div>
+          <div id="collapse3" class="collapse show" aria-labelledby="heading3" data-parent="#accordion">
+            <div class="card-body">
+              Contenido de la Card 3
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
 
 
 <script>
