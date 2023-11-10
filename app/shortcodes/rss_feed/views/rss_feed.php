@@ -27,6 +27,10 @@ foreach ($posts as $ix => $post) {
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
       <?php foreach ($posts as $ix => $post): ?>
+        <?php
+          // link al post importado; podria ser link al post remoto en el feed
+          $link = $post['guid'];
+        ?>
 
         <!-- Card  -->
         <div class="col">
@@ -34,14 +38,17 @@ foreach ($posts as $ix => $post) {
           <div class="card border-0">
             <img src="<?= $post['post_img'] ?>" class="card-img-top" alt="Imagen">
             <div class="card-body">
-              <h5 class="card-title"><?= $post['post_title'] ?></h5>
+              <h5 class="card-title"><a href="<?= $link ?>"><?= $post['post_title'] ?></a></h5>
               <p class="card-text">
                 <?= wp_html_excerpt($post['post_content'], 120) . ' [...]'; ?>
               </p>
+              <p>
+              <a href="<?= $link ?>">Continuar leyendo ⇨</a>
+              </p>
             </div>
-            <div class="card-footer">
+            <!--div class="card-footer">
               Pie de la card
-            </div>
+            </div-->
           </div>
 
         </div>
